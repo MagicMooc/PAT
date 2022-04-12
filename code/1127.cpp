@@ -6,17 +6,18 @@ using namespace std;
 const int N = 40;
 int n;
 unordered_map<int, int> l, r, pos;
-int inorder[N], postrorder[N], q[N];
+int inorder[N], postorder[N], q[N];
 
 int build(int il, int ir, int pl, int pr)
 {
-    int root = postrorder[pr];
+    int root = postorder[pr];
     int k = pos[root];
-    if (k > il)
+    if (il < k)
     {
         l[root] = build(il, k - 1, pl, pl + (k - 1 - il));
     }
-    if (k < ir)
+
+    if (ir > k)
     {
         r[root] = build(k + 1, ir, pl + (k - 1 - il) + 1, pr - 1);
     }
@@ -43,7 +44,7 @@ void bfs(int u)
                 q[++tt] = r[t];
             }
         }
-        if (++tag % 2)
+        if (++tag % 2 == 1)
         {
             reverse(q + head, q + tail + 1);
         }
@@ -60,7 +61,7 @@ int main()
     }
     for (int i = 0; i < n; i++)
     {
-        cin >> postrorder[i];
+        cin >> postorder[i];
     }
     int root = build(0, n - 1, 0, n - 1);
     bfs(root);
